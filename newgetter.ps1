@@ -73,11 +73,12 @@ while(1 -eq 1)
     Clear-Host
     if($MenuSelection -eq -1){
         $savefile = Read-Host "Do you want to save the result[y/n]"
-        if($savefile -eq 'y')
-              $fileName = Read-Host "Type in the file name"
+        if($savefile -eq 'y'){
+            $fileName = Read-Host "Type in the file name"
+        }
         $s|ForEach-Object {
-            [String] $result=$compname+"`r`n"
             $compname=$_
+             $result=$compname+"`r`n"
             $state=CheckHost $_
             if($state -eq 1){
                 "Connect to $compname"
@@ -97,16 +98,20 @@ while(1 -eq 1)
                     $date=Get-Date -UFormat "%Y.%m.%d"
                      if($savefile -eq 'y'){
                         $path="$PSScriptRoot\$date"+"_"+$fileName+".txt"
-                        if([System.IO.File]::Exists($path)
-                            $result|Out-File $path -Append
-                        else
+                        if([System.IO.File]::Exists($path)){
+                             $result|Out-File $path -Append
+                        }else{
                             $result|Out-File $path
+                        }
                     }
                 }catch{
                     "Catch Error"
-                    $result+="$compname connection Error"+"`r`n"
-                    $_|Out-File "$PSScriptRoot\log.txt"
-                    continue
+                    $path="$PSScriptRoot\log.txt"
+                        if([System.IO.File]::Exists($path)){
+                             $_|Out-File $path -Append
+                        }else{
+                            $_|Out-File $path
+                    }
                 }
                 
             }
@@ -121,10 +126,12 @@ while(1 -eq 1)
     }
     else{
          $savefile = Read-Host "Do you want to save the result[y/n]"
-         if($savefile -eq 'y')
-              $fileName = Read-Host "Type in the file name"
+         if($savefile -eq 'y'){
+             $fileName = Read-Host "Type in the file name"
+         }
+              
         $compname=$s[$MenuSelection]
-            $state=CheckHost $_
+            $state=CheckHost $compname
             if($state -eq 1){
                 "Connect to $compname"
                 try{
@@ -144,16 +151,23 @@ while(1 -eq 1)
                     $date=Get-Date -UFormat "%Y.%m.%d"
                     if($savefile -eq 'y'){
                         $path="$PSScriptRoot\$date"+"_"+$fileName+".txt"
-                        if([System.IO.File]::Exists($path)
+                        if([System.IO.File]::Exists($path)){
                             $result|Out-File $path -Append
-                        else
+                        }else{
                             $result|Out-File $path
+                        }
+
+                            
                     }
                          
                 }catch{
                     "Catch Error"
-                    $result+="$compname connection Error"+"`r`n"
-                    $_|Out-File "$PSScriptRoot\log.txt"
+                    $path="$PSScriptRoot\log.txt"
+                        if([System.IO.File]::Exists($path)){
+                             $_|Out-File $path -Append
+                        }else{
+                            $_|Out-File $path
+                    }
                 }
             }
             else{
