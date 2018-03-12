@@ -72,6 +72,9 @@ while(1 -eq 1)
     $MenuSelection = Read-Host "Enter Selection" 
     Clear-Host
     if($MenuSelection -eq -1){
+        $savefile = Read-Host "Do you want to save the result[y/n]"
+        if($savefile -eq 'y')
+              $fileName = Read-Host "Type in the file name"
         $s|ForEach-Object {
             [String] $result=$compname+"`r`n"
             $compname=$_
@@ -92,7 +95,13 @@ while(1 -eq 1)
                     "Get Info"
                     $result
                     $date=Get-Date -UFormat "%Y.%m.%d"
-                    $result|Out-File "$PSScriptRoot\$date"+"_"+"$compname.txt"
+                     if($savefile -eq 'y'){
+                        $path="$PSScriptRoot\$date"+"_"+$fileName+".txt"
+                        if([System.IO.File]::Exists($path)
+                            $result|Out-File $path -Append
+                        else
+                            $result|Out-File $path
+                    }
                 }catch{
                     "Catch Error"
                     $result+="$compname connection Error"+"`r`n"
@@ -111,6 +120,9 @@ while(1 -eq 1)
         exit
     }
     else{
+         $savefile = Read-Host "Do you want to save the result[y/n]"
+         if($savefile -eq 'y')
+              $fileName = Read-Host "Type in the file name"
         $compname=$s[$MenuSelection]
             $state=CheckHost $_
             if($state -eq 1){
@@ -130,7 +142,14 @@ while(1 -eq 1)
                     "Get Info"
                     $result
                     $date=Get-Date -UFormat "%Y.%m.%d"
-                    $result|Out-File "$PSScriptRoot\$date"+"_"+"$compname.txt"
+                    if($savefile -eq 'y'){
+                        $path="$PSScriptRoot\$date"+"_"+$fileName+".txt"
+                        if([System.IO.File]::Exists($path)
+                            $result|Out-File $path -Append
+                        else
+                            $result|Out-File $path
+                    }
+                         
                 }catch{
                     "Catch Error"
                     $result+="$compname connection Error"+"`r`n"
