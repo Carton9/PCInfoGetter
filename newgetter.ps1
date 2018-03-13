@@ -2,7 +2,7 @@ $global:pcip
 function CheckHost{ 
     param ([ValidateNotNullOrEmpty()]
     $compname  )
-    $ping = gwmi Win32_PingStatus -ErrorAction Continue -filter "Address='$compname'" 
+    $ping = gwmi Win32_PingStatus -ErrorAction SilentlyContinue -filter "Address='$compname'" 
     $ping.ProtocolAddress.GetType()
     if($ping.StatusCode -eq 0){$pcip=$ping.ProtocolAddress; return 1} 
     else{return 0} 
@@ -83,14 +83,14 @@ while(1 -eq 1)
             if($state -eq 1){
                 "Connect to $compname"
                 try{
-                    $result+="SerialNumber: "+[String](gwmi -computer $compname -ErrorAction Continue Win32_BIOS | Select-Object SerialNumber).SerialNumber+"`r`n"
-                    $rs=gwmi -ErrorAction Continue -computer $compname Win32_Printer | Select-Object DeviceID,DriverName, PortName
+                    $result+="SerialNumber: "+[String](gwmi -computer $compname -ErrorAction SilentlyContinue Win32_BIOS | Select-Object SerialNumber).SerialNumber+"`r`n"
+                    $rs=gwmi -ErrorAction SilentlyContinue -computer $compname Win32_Printer | Select-Object DeviceID,DriverName, PortName
                     $result+="Printer Info:`r`n"
                     $rs|ForEach-Object {
                         $result+="  DeviceID: "+[String]$_.DeviceID+"`r`n       DriverName: "+[String]$_.DriverName+"`r`n       PortName: "+[String]$_.PortName+"`r`n"
                     }
-                    $result+="Current User Name: "+(gwmi -ErrorAction Continue -computer $compname Win32_ComputerSystem).Username+"`r`n"
-                    $rs=(gwmi -ErrorAction Continue -computer $compname Win32_OperatingSystem)
+                    $result+="Current User Name: "+(gwmi -ErrorAction SilentlyContinue -computer $compname Win32_ComputerSystem).Username+"`r`n"
+                    $rs=(gwmi -ErrorAction SilentlyContinue -computer $compname Win32_OperatingSystem)
                     $result+="OS name:"+$rs.Caption+" "+$rs.OSArchitecture+"`r`n"
                     $result+=(GetLogin $compname)+"`r`n"
                     "Get Info"
@@ -136,14 +136,14 @@ while(1 -eq 1)
                 "Connect to $compname"
                 try{
                     $result+=$compname+": "+"`r`n"
-                    $result+="SerialNumber: "+[String](gwmi -computer $compname -ErrorAction Continue Win32_BIOS | Select-Object SerialNumber).SerialNumber+"`r`n"
-                    $rs=gwmi -computer $compname -ErrorAction Continue Win32_Printer | Select-Object DeviceID,DriverName, PortName
+                    $result+="SerialNumber: "+[String](gwmi -computer $compname -ErrorAction SilentlyContinue Win32_BIOS | Select-Object SerialNumber).SerialNumber+"`r`n"
+                    $rs=gwmi -computer $compname -ErrorAction SilentlyContinue Win32_Printer | Select-Object DeviceID,DriverName, PortName
                     $result+="Printer Info:`r`n"
                     $rs|ForEach-Object {
                         $result+="  DeviceID: "+[String]$_.DeviceID+"`r`n       DriverName: "+[String]$_.DriverName+"`r`n       PortName: "+[String]$_.PortName+"`r`n"
                     }
-                    $result+="Current User Name: "+(gwmi -computer $compname -ErrorAction Continue Win32_ComputerSystem).Username+"`r`n"
-                    $rs=(gwmi -computer $compname -ErrorAction Continue Win32_OperatingSystem)
+                    $result+="Current User Name: "+(gwmi -computer $compname -ErrorAction SilentlyContinue Win32_ComputerSystem).Username+"`r`n"
+                    $rs=(gwmi -computer $compname -ErrorAction SilentlyContinue Win32_OperatingSystem)
                     $result+="OS name:"+$rs.Caption+" "+$rs.OSArchitecture+"`r`n"
                     $result+=(GetLogin $compname)+"`r`n"
                     "Get Info"
